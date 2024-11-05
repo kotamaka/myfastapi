@@ -1,0 +1,40 @@
+name = "fastapi-cloudflare-app"
+type = "javascript"
+
+# Project name on Cloudflare (can be changed as needed)
+account_id = "9ab699afc51e9562f24e8a16638cb52c"
+workers_dev = true
+compatibility_date = "2024-11-05"  # Adjust to the current date
+
+# Define the D1 database binding
+[[d1_databases]]
+binding = "prod-d1-t2m"   # Binding name in FastAPI code
+database_name = "t2m_db"  # Database name in Cloudflare
+database_id = "97e7065c-c383-49c5-a4c5-182ff1cd6238"
+
+# Uncomment this block if you're using environment variables for secrets
+# [[vars]]
+# SECRET_KEY = "<YOUR_SECRET_KEY>"
+
+[env.production]
+workers_dev = false
+route = "https://frosty-limit-360f.kotamaka.workers.dev/*"  # Replace with your actual route or domain
+zone_id = "e2a79299758887d13c415a62ddca07e3"
+
+[build]
+command = "npm run build"   # Adjust if using a different build process
+
+[site]
+bucket = "./dist"           # Assuming FastAPI static files are built to `dist`
+entry-point = "src"
+
+[dev]
+ip = "127.0.0.1"
+port = 8000                 # FastAPI default port
+local_protocol = "http"
+
+[triggers]
+crons = ["0 0 * * *"]       # Optional: Set cron jobs for regular triggers
+
+[log]
+level = "info"
